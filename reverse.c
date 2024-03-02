@@ -103,3 +103,20 @@ void procesoArchivos(char *entradaNombreArchivo, char *salidaNombreArchivo)
     fclose(entrada); // Se cierra archivo de entrada
     fclose(salida);  // Se cierra archivo de salida
 }
+int pedirNumeroDeLineas() {
+    int numLineas;
+    fprintf(stdout, "Ingrese el número de líneas de texto: ");
+    scanf("%d", &numLineas);                                         //Se captura el número de lineas entrada estandar
+    while (getchar() != '\n');                                       // Eliminar salto de líneas
+    return numLineas;
+}
+
+//La función asigna memoria dinámica 
+char *asignarMemoriaLinea(size_t longitud) {
+    char *linea = (char *)malloc((longitud + 1) * sizeof(char));     //El array linea se construye dinamicamente 
+    if (linea == NULL) {
+        fprintf(stderr,"error malloc failed\n");
+        exit(1);
+    }
+    return linea;                                                            //Retorno del array a lineas de texto
+}
