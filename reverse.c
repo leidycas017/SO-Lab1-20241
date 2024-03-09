@@ -4,19 +4,19 @@
  *  Yuly Yesenia Albear
  *  Leidy Castaño
  *  Omar Alberto Torres
- * 
-*/
-//Bloque de librerías usadas
-#include <stdio.h>     
+ *
+ */
+// Bloque de librerías usadas
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define LONGITUD_ANCHO_ARCHIVO 1000     //Ancho del buffer
+#define LONGITUD_ANCHO_ARCHIVO 1000 // Ancho del buffer
 
 /**
  * Firmas de las funciones del programa
-*/
+ */
 void flujoPrograma(int argc, char *argv[]);
-char **leerLinea(FILE *input, int *numLineas) ;
+char **leerLinea(FILE *input, int *numLineas);
 void escribaLineasReversa(FILE *salida, char **lineas, int cuentaLinea);
 void liberaMemoria(char **lineas, int cuentaLinea);
 int archivosDiferentes(char *archivoInput, char *archivoOutput);
@@ -31,7 +31,16 @@ void invertirLineas(char **lineas, int numLineas);
 void imprimirLineasInvertidas(char **lineas, int numLineas);
 void imprimirLineas(char **lineas, int numLineas);
 void liberarMemoria(char **lineas, int numLineas);
-void textInputUser() ;
+void textInputUser();
 void opcionUno();
 void opcionDos();
 void opcionTres();
+
+/**
+ * Función principal
+ */
+int main(int argc, char *argv[])
+{
+    flujoPrograma(argc, argv);
+    return 0;
+}
