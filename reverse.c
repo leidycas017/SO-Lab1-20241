@@ -16,7 +16,6 @@
  * Firmas de las funciones del programa
  */
 void flujoPrograma(int argc, char *argv[]);
-char **leerLinea(FILE *input, int *numLineas);
 void escribaLineasReversa(FILE *salida, char **lineas, int cuentaLinea);
 void liberaMemoria(char **lineas, int cuentaLinea);
 int archivosDiferentes(char *archivoInput, char *archivoOutput);
@@ -58,14 +57,14 @@ void opcionDos(int argc, char *argv[])
 {
     if (argc != 2)
     {
-        fprintf(stderr, "Uso: %s <archivo>\n", argv[0]);
+        fprintf(stderr, "usage: reverse <input> <output>\n");
         exit(1);
     }
 
     FILE *archivo = fopen(argv[1], "r");
     if (archivo == NULL)
     {
-        fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
+        fprintf(stderr, "reverse: cannot open file '%s'\n", argv[1]);
         exit(1);
     }
 
@@ -84,7 +83,7 @@ void opcionTres(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        fprintf(stderr, "usage: %s reverse <input> <output>", argv[0]);
+        fprintf(stderr, "usage: reverse <input> <output>\n");
         exit(1);
     }
 
@@ -116,37 +115,6 @@ void flujoPrograma(int argc, char *argv[])
  * El puntero FiLE *input represente el apuntador a una estructura FILE
  *  retorna un apuntador a lieas de texto
  */
-char **leerLinea(FILE *input, int *numLineas)
-{
-    char **lineas = NULL; // Arreglo lineas de texto
-    char memoria[LONGITUD_ANCHO_ARCHIVO];
-
-    *numLineas = 0;
-
-    while (fgets(memoria, sizeof(memoria), input) != NULL)
-    { // Si la operacion de recupera cadena de input es exito repite
-        // longitud nunca será negativo
-        unsigned int longitud = (unsigned int)strlen(memoria); // Se calcula el tamaño del buffer
-        if (longitud > 0 && memoria[longitud - 1] == '\n')
-        {                                 // Truco para eliminar los saltos de linea
-            memoria[longitud - 1] = '\0'; // Se coloca un null
-        }
-
-        char *linea = strdup(memoria); // Retorna copia de la cadena
-
-        lineas = realloc(lineas, (*numLineas + 1) * sizeof(char *)); // Si bloque de memoria no es suficiente redimenciona buffer
-        if (lineas == NULL)
-        {
-            fprintf(stderr, "error malloc failed\n");
-            exit(1);
-        }
-        lineas[*numLineas] = linea; // Se almacena linea de texto en una posicion del array lineas
-
-        (*numLineas)++; // Incrementa en uno al contenido de lo apuntado por
-    }
-
-    return lineas;
-}
 
 /**
  * Se recibe como parametros un apuntador al archivo de salida, un apuntador a cadena de caracteres y la cantidad de lineas de texto
@@ -198,29 +166,29 @@ void procesoArchivos(char *entradaNombreArchivo, char *salidaNombreArchivo)
 
     if (entrada == NULL)
     {
-        fprintf(stderr, "error: cannot open file %s\n", entradaNombreArchivo);
+        fprintf(stderr, "reverse: cannot open file %s\n", entradaNombreArchivo);
         exit(1);
     }
 
     FILE *salida = fopen(salidaNombreArchivo, modo);
     if (salida == NULL)
     {
-        fprintf(stderr, "error: cannot open file%s\n", salidaNombreArchivo); // Error de apertura archivo de salida
+        fprintf(stderr, "reverse: cannot open file %s\n", salidaNombreArchivo); // Error de apertura archivo de salida
         fclose(salida);
         exit(1);
     }
 
     if (strcmp(entradaNombreArchivo, salidaNombreArchivo) == 0)
     {
-        fprintf(stderr, "El archivo de entrada y salida deben diferir\n"); // Error archivos tienen el mismo nombre
+        fprintf(stderr, "reverse: input and output file must differ\n"); // Error archivos tienen el mismo nombre
         fclose(entrada);
         fclose(salida);
         exit(1);
     }
 
     int cuentaLinea;                                  // Variable  pensada para tener el numero de lineas de texto
-    char **lineas = leerLinea(entrada, &cuentaLinea); //  Retorna array con lineas de texto y cantidad delineas de texto
-
+    char **lineas = leerArchivo(entrada, &cuentaLinea); //  Retorna array con lineas de texto y cantidad delineas de texto
+   
     escribaLineasReversa(salida, lineas, cuentaLinea); // Se invoca funcion que almacena lineas de texto en forma invertida en salida fisica
 
     liberaMemoria(lineas, cuentaLinea); // libera memoria
@@ -277,6 +245,7 @@ char **leerArchivo(FILE *archivo, int *numLineas)
 
     return lineas;
 }
+
 /**
  * La funcion lee una cantidad de lineas de texto entrada estandar
  */
